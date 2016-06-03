@@ -33,7 +33,7 @@ var App = React.createClass({
 
   _getGrids: function () {
     var contents = [];
-    var grids = this.props.grids;
+    var grids = this._sort(this.props.grids, this.state.filterOption);
     for (var i=0; i<grids.length; i+=3) {
       var left = (<ExpandableDiv 
         color={grids[i].color}
@@ -57,6 +57,35 @@ var App = React.createClass({
       );
     }
     return contents;
+  },
+
+  _sort: function (grids, option) {
+    console.log(option);
+    if (option === 'All') {
+      return grids;
+    } else if (option === 'Warm') {
+      return grids.slice().sort(function (a, b) {
+        if (a.warm < b.warm) {
+          return 1;
+        } else if (a.warm > b.warm) {
+          return -1;
+        } else {
+          return 0;
+        }
+      });      
+    } else if (option === 'Cold') {
+      return grids.slice().sort(function (a, b) {
+        if (a.warm < b.warm) {
+          return -1;
+        } else if (a.warm > b.warm) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
+    } else {
+      console.log('unknown option');
+    }
   }
   
 
