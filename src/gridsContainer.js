@@ -1,41 +1,31 @@
 var React = require('react');
 var ExpandableDiv = require('./expandableDiv.js');
+var SpringGrid = require('react-stonecutter').SpringGrid;
+var layout = require('react-stonecutter').layout;
+var easings = require('react-stonecutter').easings;
 
 var GridsContainer = React.createClass({
+
   render: function () {
     return (
-      <div className="grids">
-        {this._getGrids()}
-      </div>
+      <SpringGrid
+        columns={3}
+        columnWidth={60}
+        gutterWidth={10}
+        gutterHeight={15}
+        layout={layout.pinterest}
+        enter={() => ({ scale: 0, opacity: 0 })}
+        entered={() => ({ scale: 1, opacity: 1 })}
+        exit={() => ({ scale: 0, opacity: 0 })}
+        perspective={600}        
+        duration={800}
+        easing={easings.quadIn}
+        springConfig={{ stiffness: 170, damping: 26 }}
+      >
+        {this.props.children}
+      </SpringGrid>
     );
-  },
-  _getGrids: function () {
-    var contents = [];
-    var grids = this.props.grids;
-    for (var i=0; i<grids.length; i+=3) {
-      var left = (<ExpandableDiv 
-        color={grids[i].color}
-        name={grids[i].name}
-        key={i}
-      ></ExpandableDiv>);
-      var middle = i+1<grids.length ? (<ExpandableDiv
-          color={grids[i+1].color}
-          name={grids[i+1].name}
-          key={i+1}
-        ></ExpandableDiv>) : null;
-      var right = i+2<grids.length ? (<ExpandableDiv
-          color={grids[i+2].color}
-          name={grids[i+2].name}
-          key={i+2}
-        ></ExpandableDiv>) : null;
-      contents.push(
-        <div className="row" key={i}>
-          {left}{middle}{right}
-        </div>
-      );
-    }
-    return contents;
-  },
+  }
 
 });
 
